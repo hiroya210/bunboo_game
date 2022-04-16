@@ -39,6 +39,7 @@ function preload ()
 
 function create ()
 {
+    
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
 
@@ -89,7 +90,7 @@ function create ()
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
         key: 'star',
-        repeat: 0,
+        repeat: 10,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
 
@@ -122,8 +123,7 @@ function update ()
     if (gameOver)
     {   
         gameoverText = this.add.text(300, 200, 'GAME OVER!', { fontSize: '32px', fill: '#000' });
-        highscore = this.add.text(275, 250, 'Highscore: ' + score, { fontSize: '32px', fill: '#000' });
-        restartBtn = this.add.text(250, 300, 'Press R to Play Again', { fontSize: '32px', fill: '#000' });
+        highscore = this.add.text(200, 250, `Highscore: ${score}\nPress R to Play Again`, { fontSize: '32px', fill: '#000', align: "center" });
 
         if (keyR.isDown){
             this.scene.restart()
