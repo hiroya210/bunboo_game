@@ -24,16 +24,17 @@ var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
+let lastPress = "right"
 
 var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('sky', 'assets/sky.png');
+    this.load.image('sky', 'assets/bg.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('dude', 'assets/bunboo.png', { frameWidth: 330, frameHeight: 555 });
 }
 
 function create ()
@@ -54,8 +55,8 @@ function create ()
     platforms.create(750, 220, 'ground');
 
     // The player and its settings
-    player = this.physics.add.sprite(100, 450, 'dude');
-
+    player = this.physics.add.sprite(0, 300, 'dude');
+    player.setScale(0.1)
     //  Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
@@ -63,7 +64,7 @@ function create ()
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
         key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
         frameRate: 10,
         repeat: -1
     });
@@ -76,13 +77,14 @@ function create ()
 
     this.anims.create({
         key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+        frames: this.anims.generateFrameNumbers('dude', { start: 3, end: 5 }),
         frameRate: 10,
         repeat: -1
     });
 
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
+    keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
@@ -116,8 +118,18 @@ function create ()
 
 function update ()
 {
+
     if (gameOver)
-    {
+    {   
+        gameoverText = this.add.text(300, 200, 'GAME OVER!', { fontSize: '32px', fill: '#000' });
+        highscore = this.add.text(275, 250, 'Highscore: ' + score, { fontSize: '32px', fill: '#000' });
+        restartBtn = this.add.text(250, 300, 'Press R to Play Again', { fontSize: '32px', fill: '#000' });
+
+        if (keyR.isDown){
+            this.scene.restart()
+            gameOver = false;
+        }
+
         return;
     }
 
@@ -126,18 +138,20 @@ function update ()
         player.setVelocityX(-160);
 
         player.anims.play('left', true);
+        lastPress = "left"
     }
     else if (cursors.right.isDown)
     {
         player.setVelocityX(160);
 
         player.anims.play('right', true);
+        lastPress = "right"
     }
     else
     {
         player.setVelocityX(0);
 
-        player.anims.play('turn');
+        player.anims.play(lastPress);
     }
 
     if (cursors.up.isDown && player.body.touching.down)
@@ -163,7 +177,7 @@ function collectStar (player, star)
 
         });
 
-        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+        var x = (player.x < 400) ? Phaser.Math.Between(500, 800) : Phaser.Math.Between(0, 400);
 
         var bomb = bombs.create(x, 16, 'bomb');
         bomb.setBounce(1);
@@ -180,7 +194,7 @@ function hitBomb (player, bomb)
 
     player.setTint(0xff0000);
 
-    player.anims.play('turn');
+    player.anims.play("turn");
 
     gameOver = true;
 }
