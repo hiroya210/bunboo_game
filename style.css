@@ -2,3 +2,11 @@ canvas {
     display : block;   
     margin : auto;
 }
+
+@media screen and (max-width: 600px) {
+    canvas {
+        display : block;
+        margin : auto;
+        width: 350px;
+    }
+}
