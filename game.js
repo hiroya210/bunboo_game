@@ -35,11 +35,11 @@ function preload ()
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.spritesheet('dude', 'assets/bunboo.png', { frameWidth: 330, frameHeight: 555 });
+    this.load.plugin('rexvirtualjoystickplugin', rexvirtualjoystickplugin, true)
 }
 
 function create ()
 {
-    
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
 
